@@ -19,7 +19,7 @@ from boost_py.helpers.core.datetime_helper import DateTimeHelper
 wb = Workbook()
 ws = wb.active
 ws.append(["发布链接", "粉丝数", "转", "评", "赞", "15天互动量", "是否为视频", "播放量", "V", "发布时间"])
-df = pd.read_excel(r"D:\8月ERP工单数据\weibo_08_06\奥运拉链接.xlsx")
+df = pd.read_excel(r"D:\red_book\red_book_51wom\red_book_10月\red_book_10_08\【1008】闲鱼校园圈跑数据.xlsx")
 print(df.columns)
 urls = df["发布链接"]
 
@@ -46,7 +46,7 @@ for index, url in enumerate(urls):
             # print(text)
         except:
             ws.append([url, 0, 0, 0, 0, 0, 0])
-            wb.save("./data/单文章采集.xlsx")
+            wb.save("./data/weibo_0927单文章采集.xlsx")
             continue
         forward = re.findall(
             r'<span class=\\"pos\\"><span class=\\"line S_line1\\" node-type=\\"forward_btn_text\\"><span><em class=\\"W_ficon ficon_forward S_ficon\\">.*?<\\/em><em>(.*?)<\\/em><\\/span><\\/span><\\/span><\\/a>',
@@ -112,7 +112,7 @@ for index, url in enumerate(urls):
         all_interact_count = int(forward_count) + int(comment_count) + int(like_count)
         print(forward, comment, like, video, play_count, verify_, level)
         ws.append([url, str(fans), forward_count, comment_count, like_count, round(all_interact_count / 15, 2), video, play_count, level])
-        wb.save("./data/weibo_0621单文章采集1.xlsx")
+        wb.save("./data/weibo_0927单文章采集1.xlsx")
     else:
         mweibo_cn_url = url
         headers = {
@@ -176,5 +176,5 @@ for index, url in enumerate(urls):
             [url, fans_count, article_reposts_count, article_comments_count, article_attitudes_count,  str((all_interact_count / 15, 2)),
              video,
              play_count, level, article_post_format_time])
-        wb.save("./data/weibo_0803单文章采集.xlsx")
+        wb.save("./data/weibo_0927单文章采集.xlsx")
     print("=" * 100)
