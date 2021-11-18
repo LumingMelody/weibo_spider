@@ -18,13 +18,13 @@ from boost_py.helpers.core.datetime_helper import DateTimeHelper
 
 wb = Workbook()
 ws = wb.active
-ws.append(["发布链接", "粉丝数", "转", "评", "赞", "15天互动量", "是否为视频", "播放量", "V", "发布时间"])
-df = pd.read_excel(r"D:\red_book\red_book_51wom\red_book_10月\red_book_10_08\【1008】闲鱼校园圈跑数据.xlsx")
+ws.append(["用户名", "发布链接", "粉丝数", "转", "评", "赞", "15天互动量", "是否为视频", "播放量", "V", "发布时间"])
+df = pd.read_excel(r"D:\weibo\weibo_11月\weibo_11_18\weibo_urls.xlsx")
 print(df.columns)
 urls = df["发布链接"]
 
 for index, url in enumerate(urls):
-    url = url.replace("http://", "https://").replace(" ", "").replace(" ", "")
+    url = url.replace("http://", "https://").replace(" ", "").strip()
     if "weibo.com" in url:
         headers = {
             'authority': 'weibo.com',
@@ -43,6 +43,7 @@ for index, url in enumerate(urls):
         try:
             response = requests.get(url, headers=headers)
             text = response.content.decode()
+            time.sleep(1)
             # print(text)
         except:
             ws.append([url, 0, 0, 0, 0, 0, 0])
@@ -62,6 +63,10 @@ for index, url in enumerate(urls):
             like = like[1:]
         video = "否"
         play_ = re.findall(r'&play_count=(.*?)&duration=', text, re.S)
+        w_id = url.split('/')[-1]
+        user_url = f"https://weibo.com/ajax/side/cards/sideUser?id={w_id}&idType=mid"
+        resp = requests.get(url=user_url, headers=headers).json()
+        screen_name = resp['data']['user']['screen_name']
         if play_:
             video = "是"
             play_count = play_[0]
@@ -111,8 +116,10 @@ for index, url in enumerate(urls):
             like_count = like[0]
         all_interact_count = int(forward_count) + int(comment_count) + int(like_count)
         print(forward, comment, like, video, play_count, verify_, level)
-        ws.append([url, str(fans), forward_count, comment_count, like_count, round(all_interact_count / 15, 2), video, play_count, level])
-        wb.save("./data/weibo_0927单文章采集1.xlsx")
+        ws.append(
+            [screen_name, url, str(fans), forward_count, comment_count, like_count, round(all_interact_count / 15, 2),
+             video, play_count, level])
+        wb.save("./data/weibo_0927单文章采集.xlsx")
     else:
         mweibo_cn_url = url
         headers = {
@@ -120,6 +127,7 @@ for index, url in enumerate(urls):
         }
         resp = requests.get(mweibo_cn_url, headers=headers)
         content = resp.content.decode()
+        time.sleep(1)
         try:
             render_data = re.findall(r'\$render_data = \[(.*?)\]\[0\]', content, re.S)[0].replace("\n", "").replace(" ",
                                                                                                                     "")
@@ -134,6 +142,7 @@ for index, url in enumerate(urls):
         print(json_data["status"])
         user = json_data["status"]["user"]
         fans_count = user["followers_count"]
+        screen_name = user["screen_name"]
         attention_count = user["follow_count"]
         post_count = user["statuses_count"]
 
@@ -148,7 +157,7 @@ for index, url in enumerate(urls):
             else:
                 level = "未知"
         elif verify == 3:
-            level = "蓝V"
+            level = "蓝V",
         else:
             level = "未认证"
         print(json_data)
@@ -173,8 +182,9 @@ for index, url in enumerate(urls):
         article_post_format_time = DateTimeHelper.format_datetime(
             DateTimeHelper.parse_formatted_datetime(article_post_time, "%a%b%d%H:%M:%S+0800%Y"))
         ws.append(
-            [url, fans_count, article_reposts_count, article_comments_count, article_attitudes_count,  str((all_interact_count / 15, 2)),
+            [screen_name, url, fans_count, article_reposts_count, article_comments_count, article_attitudes_count,
+             str((all_interact_count / 15, 2)),
              video,
              play_count, level, article_post_format_time])
-        wb.save("./data/weibo_0927单文章采集.xlsx")
+    wb.save("./data/weibo_0927单文章采集.xlsx")
     print("=" * 100)

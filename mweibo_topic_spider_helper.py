@@ -324,9 +324,54 @@ class MweiboTopicSpiderHelper(object):
                                       user_url, fans_num, gender]
                             print(m_list)
                             wb.append(m_list)
+                        elif i.get('card_group'):
+                            try:
+                                mblog = i['card_group'][0]['mblog']
+                                text = mblog['text']
+                                text = re.sub('<.*?>', '', text)
+                                article_url = 'http://m.weibo.cn/detail/' + mblog['id']
+                                # create_at = mblog['created_at']
+                                create_time = format_weibo_posttime(mblog["created_at"]).replace("+0800", "")
+                                # print(create_time)
+                                article_time = datetime.datetime.strptime(create_time, "%a %b %d %H:%M:%S %Y")
+                                reposts_count = mblog['reposts_count']
+                                comments_count = mblog['comments_count']
+                                attitudes_count = mblog['attitudes_count']
+                                user = mblog['user']
+                                verify = user["verified_type"]
+                                if verify == -1:
+                                    level = "未认证"
+                                elif verify == 0:
+                                    if user["verified_type_ext"] == 0:
+                                        level = "黄V"
+                                    elif user["verified_type_ext"] == 1:
+                                        level = "红V"
+                                    else:
+                                        level = "未知"
+                                elif verify == 3:
+                                    level = "蓝V"
+                                else:
+                                    level = "未认证"
+                                user_name = user['screen_name']
+                                user_url = 'http://weibo.com/u/' + str(user['id'])
+                                gender = user['gender']
+                                if gender == 'f':
+                                    gender = "女"
+                                else:
+                                    gender = "男"
+                                fans_num = user['followers_count']
+                                m_list = [text, article_url, article_time, reposts_count, comments_count, attitudes_count,
+                                          level,
+                                          user_name,
+
+                                          user_url, fans_num, gender]
+                                print(m_list)
+                                wb.append(m_list)
+                            except Exception as e:
+                                print(e)
             if api_json['ok'] == 0 and api_json["msg"] == "这里还没有内容":
                 break
-            time.sleep(10)
+            time.sleep(5)
         ws.save(f'{topic_keyword}.xlsx')
 
     @classmethod
@@ -394,8 +439,8 @@ class MweiboTopicSpiderHelper(object):
 
 if __name__ == '__main__':
     # MweiboTopicSpiderHelper.spider_topic(1, '#这届春节怎么团圆#')
-    # MweiboTopicSpiderHelper.spider_topic(1, '#过年版合成大西瓜#')
-    MweiboTopicSpiderHelper.spider_topic(1, '#凡尔赛式包过年饺子#')
+    MweiboTopicSpiderHelper.spider_topic(1, '#节后有人卖三分甜西北风了#')
+    MweiboTopicSpiderHelper.spider_topic(1, '#女子一天频繁喊快递小哥上门取件#')
     # MweiboTopicSpiderHelper.spider_topic(1, '#手机里走完春节流程#')
     # MweiboTopicSpiderHelper.spider_topic(1, '#爸妈P的团圆照#')
     # MweiboTopicSpiderHelper.spider_topic(1, '#李佳琪#')
