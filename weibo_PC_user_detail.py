@@ -9,10 +9,11 @@ ws = wb.active
 ws.append([
     '用户名',
     '粉丝数',
-    '用户认证信息'
+    '用户认证信息',
+    '主页链接'
 ])
 
-cookie = "SINAGLOBAL=8200568277792.315.1616569676918; _ga=GA1.2.61589090.1616644667; SUB=_2A25NYpTNDeRhGeNL61cZ8irPzDuIHXVurDyFrDV8PUJbkNAKLVLgkW1NSOu9u1cnRflVimoNEv_cURkWH9ob_aXT; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWkQeOeXIa3Un.6dwp7CaYw5NHD95QfSK5f1hzXe0MNWs4Dqcjqi--RiK.XiKy2i--4i-zRi-20-c8uUPiy; wvr=6; wb_view_log_5505824377=1920*10801; _s_tentry=www.baidu.com; UOR=,,www.baidu.com; Apache=3326332886095.5845.1620796823826; ULV=1620796823837:13:3:3:3326332886095.5845.1620796823826:1620696227066; webim_unReadCount=%7B%22time%22%3A1620796826356%2C%22dm_pub_total%22%3A1%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A40%2C%22msgbox%22%3A0%7D"
+cookie = "_ga=GA1.2.954032487.1637046479; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWndaMrC7jCK8pQ3JIVbkC45NHD95QNSK5c1K2cS0BNWs4DqcjMi--NiK.Xi-2Ri--ciKnRi-zNS0-7So.pSoMXS7tt; _T_WM=25809315740; MLOGIN=1; SCF=Ak_bWPSqvc6NA3_kw05YbeE72JbVSXImnZcdfWZTqbwguRl-7t5hqVSgx9M-bJLM4ja_AfykUjSZrhqAbjwV880.; SUB=_2A25M4kfCDeRhGeFL61QY8SjLzzuIHXVsLWmKrDV6PUJbktCOLUrkkW1NQoYgC00_veM5ruTOMydcyf09PR4zgJHD; SSOLoginState=1642477458; WEIBOCN_FROM=1110106030; _gid=GA1.2.107700197.1642490934; XSRF-TOKEN=099369; M_WEIBOCN_PARAMS=oid%3D4724070970820638%26luicode%3D20000174%26lfid%3D4724070970820638%26uicode%3D20000174"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -25,7 +26,7 @@ headers = {
 }
 
 
-def get_weibo_user(w_url):
+def get_weibo_user(u_id, w_url):
     try:
         resp = requests.get(url=w_url, headers=headers).json()
         user_info = resp['data']['user']
@@ -33,22 +34,27 @@ def get_weibo_user(w_url):
         user_name = user_info['screen_name']
         user_desc = user_info['description']
         user_fans = user_info['followers_count']
+        user_url = f"https://weibo.com/u/{u_id}"
         if 'verified_reason' in user_info.keys():
             user_verified = user_info['verified_reason']
         else:
             user_verified = ""
         user_desc_verified = str(user_desc) + str(user_verified)
-        ws.append([user_name, user_fans, user_desc_verified])
+        ws.append([user_name, u_id, user_fans, user_desc_verified, user_url])
     except Exception as e:
         print(e)
-    wb.save(r"D:\weibo\weibo_7月\weibo_07_01\补缺result.xlsx")
+    wb.save(r"D:\weibo\weibo22_1月\weibo_01_20\weibo_index_result_.xlsx")
 
 
 if __name__ == '__main__':
-    df = pd.read_excel(r"D:\weibo\weibo_7月\weibo_07_01\补缺.xlsx")
-    urls = df['主页链接']
+    df = pd.read_excel(r"D:\weibo\weibo22_1月\weibo_01_20\weibo_urls.xlsx")
+    urls = df['发布链接']
     for url in urls:
-        u_id = url.split("/")[-1]
-        u_url = f"https://weibo.com/ajax/profile/info?custom={u_id}"
-        get_weibo_user(u_url)
-        time.sleep(3)
+        # if '?' in url:
+        #     u_id = url.split("/")[-1].split('?')[0]
+        # else:
+        u_id = url.split("/")[-2]
+        u_url = f"https://weibo.com/ajax/profile/info?uid={u_id}"
+        print(u_url)
+        get_weibo_user(u_id, u_url)
+        time.sleep(1)

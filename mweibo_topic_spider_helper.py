@@ -323,7 +323,8 @@ class MweiboTopicSpiderHelper(object):
                                       user_name,
                                       user_url, fans_num, gender]
                             print(m_list)
-                            wb.append(m_list)
+                            if fans_num.endswith("万"):
+                                wb.append(m_list)
                         elif i.get('card_group'):
                             try:
                                 mblog = i['card_group'][0]['mblog']
@@ -366,7 +367,8 @@ class MweiboTopicSpiderHelper(object):
 
                                           user_url, fans_num, gender]
                                 print(m_list)
-                                wb.append(m_list)
+                                if fans_num.endswith("万"):
+                                    wb.append(m_list)
                             except Exception as e:
                                 print(e)
             if api_json['ok'] == 0 and api_json["msg"] == "这里还没有内容":
@@ -438,9 +440,9 @@ class MweiboTopicSpiderHelper(object):
 
 
 if __name__ == '__main__':
-    # MweiboTopicSpiderHelper.spider_topic(1, '#这届春节怎么团圆#')
-    MweiboTopicSpiderHelper.spider_topic(1, '#节后有人卖三分甜西北风了#')
-    MweiboTopicSpiderHelper.spider_topic(1, '#女子一天频繁喊快递小哥上门取件#')
+    MweiboTopicSpiderHelper.spider_topic(1, '#双11成就#')
+    MweiboTopicSpiderHelper.spider_topic(1, '#我的双11回忆#')
+    MweiboTopicSpiderHelper.spider_topic(1, '#最破防的表白情歌# ')
     # MweiboTopicSpiderHelper.spider_topic(1, '#手机里走完春节流程#')
     # MweiboTopicSpiderHelper.spider_topic(1, '#爸妈P的团圆照#')
     # MweiboTopicSpiderHelper.spider_topic(1, '#李佳琪#')

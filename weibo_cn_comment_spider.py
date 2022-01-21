@@ -4,7 +4,7 @@ import requests
 from lxml import etree
 from openpyxl import Workbook
 
-cookie = "SINAGLOBAL=6527234529095.878.1632706024442; UOR=,,www.google.com.hk; ULV=1635232371340:4:2:1:9789622234864.035.1635232371337:1633676284515; SUB=_2A25Mc9rbDeRhGeNL61cZ8irPzDuIHXVvn-aTrDV8PUJbkNAKLWbNkW1NSOu9u3awWlaWQNVq8z7GNkaGzOBJb8V-; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWkQeOeXIa3Un.6dwp7CaYw5NHD95QfSK5f1hzXe0MNWs4Dqcjqi--RiK.XiKy2i--4i-zRi-20-c8uUPiy; XSRF-TOKEN=UhXN_cM0SjXroUGZ22q4LjUB; WBPSESS=784AcvWHjyhSLTMYqaBB2R0muMjGEdz8u8017ujja8B-rRUzTBnm7gsagnfGgQRZMwlpTaxKm8LttvPFZdErKii-SFpZiYXs46cBW0XsroeQSPX4pQNTxqD8G2kHL6OvMbuMCxTGgvCHnXX-mMo7LQ=="
+cookie = "SINAGLOBAL=6527234529095.878.1632706024442; UOR=,,www.google.com.hk; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWkQeOeXIa3Un.6dwp7CaYw5JpX5KMhUgL.Fo-feh-ReoB0S0M2dJLoIpnLxKnL1KBL12BLxK.LBonLBKSKqg_fMJ2t; ULV=1641960628527:8:2:1:3925243501454.585.1641960628407:1641542345529; ALF=1674013221; SSOLoginState=1642477221; SCF=Ak_bWPSqvc6NA3_kw05YbeE72JbVSXImnZcdfWZTqbwgfzY7BZ6w2qHEhym9GwNRsaKy-aitY9ed_SYAVBKSQgA.; SUB=_2A25M4kb2DeRhGeNL61cZ8irPzDuIHXVvlj8-rDV8PUNbmtAKLVjAkW9NSOu9u5cpB4fWxoPjNAtf4_uJbiJrLtja; XSRF-TOKEN=6pR02dY6_45ADAmjB1n-fKOn; WBPSESS=784AcvWHjyhSLTMYqaBB2R0muMjGEdz8u8017ujja8B-rRUzTBnm7gsagnfGgQRZqAAPc9f3-TXGkFGbfKm47_fMHxq13g1-hcppz8wf4tD1LORCk3gH_gpkgEV5hvZPNNjIZUQ_I2GlhCJO0Ie3EA=="
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -39,13 +39,13 @@ def get_comment(w_url):
             else:
                 print(content)
                 ws.append([content])
-                wb.save(r'D:\weibo\weibo_11月\weibo_11_18\双11惊喜宝箱_评论_1.xlsx')
+                wb.save(r'D:\weibo\weibo22_1月\weibo_01_18\微博评论.xlsx')
     except Exception as e:
         print(e)
 
 
 if __name__ == '__main__':
-    df = pd.read_excel(r'D:\weibo\weibo_11月\weibo_11_18\#双11惊喜宝箱#.xlsx')
+    df = pd.read_excel(r'D:\weibo\weibo22_1月\weibo_01_18\#新年带点新年味回家#.xlsx')
     urls = df['发布链接']
     for url in urls:
         w_id = url.split("/")[-1]

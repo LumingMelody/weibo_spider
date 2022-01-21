@@ -44,7 +44,7 @@ proxies = {
     "https": proxyMeta,
 }
 
-cookie = "SINAGLOBAL=8200568277792.315.1616569676918; _ga=GA1.2.61589090.1616644667; ALF=1655430343; SCF=ArJTlx5JAmfMMKsVG7OAs2l4yApmQVJhD9qWf4GqsANvJ-VkjYkICkxHviQgKrfTDEByU-vFCBAdFh1HrVp1imA.; UOR=,,www.baidu.com; SUB=_2A25Nz1uSDeRhGeFL61QY8SjLzzuIHXVvMGXarDV8PUJbkNANLW7HkW1NQoYgC2J5bthvs9U6_OQShwtZLGvRtP1Q; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWndaMrC7jCK8pQ3JIVbkC45NHD95QNSK5c1K2cS0BNWs4DqcjMi--NiK.Xi-2Ri--ciKnRi-zNS0-7So.pSoMXS7tt; ULV=1624248279117:25:9:1:3899743233654.3315.1624248279095:1623988326683; XSRF-TOKEN=EGGcH3l-CXsdoPsYBVswno7J; WBPSESS=rSH8qlmtxIb2KaNvc7cFsEHsDlvyUXEwQbwH3w0yMG--SSGr-OMR-U9sj81WFvBDvFo6XPKg_qCbYYu8lorngCitUQU31oKV7NRg8mpHfmvSO1Q7p6BLa8gHBUoi2amw"
+cookie = "SINAGLOBAL=6527234529095.878.1632706024442; UOR=,,www.google.com.hk; SUB=_2A25Mc9rbDeRhGeNL61cZ8irPzDuIHXVvn-aTrDV8PUJbkNAKLWbNkW1NSOu9u3awWlaWQNVq8z7GNkaGzOBJb8V-; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWkQeOeXIa3Un.6dwp7CaYw5NHD95QfSK5f1hzXe0MNWs4Dqcjqi--RiK.XiKy2i--4i-zRi-20-c8uUPiy; _s_tentry=-; Apache=2013801656523.3574.1641542345405; ULV=1641542345529:7:1:1:2013801656523.3574.1641542345405:1640054077977; XSRF-TOKEN=ItGQFexDDaald-SS1u3L3gZp; WBPSESS=784AcvWHjyhSLTMYqaBB2R0muMjGEdz8u8017ujja8B-rRUzTBnm7gsagnfGgQRZqAAPc9f3-TXGkFGbfKm478XEosJzwDoBV5GBAZuku_k1OwQMzavkowPBrCMDxpCv0MIo14MuCScxYmOEOKZ21w=="
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -116,8 +116,8 @@ def weibo_his(uid, article_start_time ,article_stop_time, page):
             # print(type(article_start_time))
             n_article_start_time = datetime.datetime.strptime(str(article_start_time), '%Y-%m-%d %H:%M:%S')
             n_article_stop_time = datetime.datetime.strptime(str(article_stop_time), '%Y-%m-%d %H:%M:%S')
-            if article_time < n_article_start_time or article_time > n_article_stop_time:
-                break
+            if n_article_start_time <= article_time <= n_article_stop_time:
+
             # ws.append(
             #     [user_name, note_url, n_id, reposts_count, attitudes_count, comments_count, content, article_time])
             # while cards['mblog']['page_info'] is not None:
@@ -126,11 +126,11 @@ def weibo_his(uid, article_start_time ,article_stop_time, page):
             # if num >= 15:
             #     print("退出循环")
             #     break
-            ws.append([user_name, note_url, reposts_count, attitudes_count, comments_count, article_time, is_Top])
-        time.sleep(1)
+                ws.append([user_name, note_url, reposts_count, attitudes_count, comments_count, article_time, is_Top])
+        time.sleep(2)
     # except Exception as e:
     #     print(e)
-    wb.save(r"D:\weibo\weibo_7月\weibo_07_28\weibo_长城汽车1_his.xlsx")
+    wb.save(r"D:\weibo\weibo22__1月\weibo_01_07\weibo_UNI星球_his.xlsx")
 
 
 if __name__ == '__main__':
@@ -138,20 +138,20 @@ if __name__ == '__main__':
     # wei_bo_content(url)
     # df = pd.read_excel(r"D:\weibo\weibo_7月\weibo_07_20\长安汽车.xlsx")
     article_start_time = '2021-01-01 00:00:00'
-    article_stop_time = '2021-07-28 11:12:00'
+    article_stop_time = '2021-12-30 11:59:59'
     # urls = df["主页链接"]
     with ThreadPoolExecutor(40) as t:
         page = 0
-        for i in range(0, 60):
-            page += 1
+        for i in range(0, 150):
             # print(page)
             # history_url = ""
             # for url in urls:
             # if "https://weibo.com/u/" in url:
             # containerid = '107603' + uid
             # uid = url.split("/")[-1]
-            uid = "1840067451"
+            uid = "7396009734"
             # # api_url = "https://m.weibo.cn/api/container/getIndex?uid={}&containerid={}".format(uid, containerid)
             # weibo_his(uid=uid, article_start_time=article_start_time, article_stop_time=article_stop_time, page=page)
             t.submit(weibo_his, uid=uid, article_start_time=article_start_time, article_stop_time=article_stop_time,
                      page=page)
+            page += 1

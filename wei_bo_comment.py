@@ -54,36 +54,36 @@ def get_weibo_comments(w_url, n_id):
     if resp['ok'] == 0:
         return
     items = resp['data']['data']
-    total_number = resp['data']['total_number']
-    if total_number % 20 == 0:
-        page = total_number/20
-    else:
-        page = int((total_number / 20)) + 1
+    # total_number = resp['data']['total_number']
+    # if total_number % 20 == 0:
+    #     page = total_number/20
+    # else:
+    #     page = int((total_number / 20)) + 1
 
     # while resp['data']['max_id']:
-    for i in range(0, page):
-        print("*************")
-        try:
-            for item in items:
-                comment = re.sub(r'<.*?>', '', item['text'])
-                user_name = item['user']['screen_name']
-                # for i in lst:
-                #     if i in comment:
-                ws.append([user_name, comment])
-                print([user_name, comment])
-            max_id = resp['data']['max_id']
-            next_url = f"https://m.weibo.cn/comments/hotflow?id={n_id}&mid={n_id}&max_id={max_id}&max_id_type=0"
-            # print(next_url)
-            resp = requests.get(url=next_url, headers=headers2).json()
-            # print(resp)
-            items = resp['data']['data']
-        except Exception as e:
-            print(e)
-    wb.save(r"D:\weibo\weibo_11月\weibo_11_18\我的双11回忆_评论.xlsx")
+    for item in items:
+        # print("*************")
+        # try:
+        #     for item in items:
+        comment = re.sub(r'<.*?>', '', item['text'])
+        user_name = item['user']['screen_name']
+        # for i in lst:
+        #     if i in comment:
+        ws.append([user_name, comment])
+        print([user_name, comment])
+        # max_id = resp['data']['max_id']
+        # next_url = f"https://m.weibo.cn/comments/hotflow?id={n_id}&mid={n_id}&max_id={max_id}&max_id_type=0"
+        # # print(next_url)
+        # resp = requests.get(url=next_url, headers=headers2).json()
+        # # print(resp)
+        # items = resp['data']['data']
+        # except Exception as e:
+        #     print(e)
+    wb.save(r"D:\weibo\weibo22_1月\weibo_01_18\新年带点新年味回家_评论.xlsx")
 
 
 if __name__ == '__main__':
-    wd = pd.read_excel(r"D:\weibo\weibo_11月\weibo_11_18\#我的双11回忆#.xlsx")
+    wd = pd.read_excel(r"D:\weibo\weibo22_1月\weibo_01_18\#新年带点新年味回家#.xlsx")
     urls = wd['发布链接']
     for url in urls:
         n_id = url.split("/")[-1]

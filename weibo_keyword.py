@@ -7,12 +7,11 @@ from pytz import timezone
 
 zone = 'Asia/Shanghai'
 
-cookie = "SINAGLOBAL=6527234529095.878.1632706024442; UOR=,,www.google.com.hk; ULV=1635232371340:4:2:1:9789622234864.035.1635232371337:1633676284515; SUB=_2A25Mc9rbDeRhGeNL61cZ8irPzDuIHXVvn-aTrDV8PUJbkNAKLWbNkW1NSOu9u3awWlaWQNVq8z7GNkaGzOBJb8V-; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWkQeOeXIa3Un.6dwp7CaYw5NHD95QfSK5f1hzXe0MNWs4Dqcjqi--RiK.XiKy2i--4i-zRi-20-c8uUPiy; XSRF-TOKEN=jTIOSEZ-0Id_ohhlSd86x36P; WBPSESS=784AcvWHjyhSLTMYqaBB2R0muMjGEdz8u8017ujja8B-rRUzTBnm7gsagnfGgQRZqAAPc9f3-TXGkFGbfKm4730Iz1EgpVQH8zph4ZLFEf1j2w_MKrAkAwErNDZun1oJP5MWZP47I6OrP02CMnCdnw=="
+cookie = "SINAGLOBAL=6527234529095.878.1632706024442; UOR=,,www.google.com.hk; SUB=_2A25Mc9rbDeRhGeNL61cZ8irPzDuIHXVvn-aTrDV8PUJbkNAKLWbNkW1NSOu9u3awWlaWQNVq8z7GNkaGzOBJb8V-; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWkQeOeXIa3Un.6dwp7CaYw5NHD95QfSK5f1hzXe0MNWs4Dqcjqi--RiK.XiKy2i--4i-zRi-20-c8uUPiy; ULV=1636956919329:5:1:1:7408887662759.944.1636956919236:1635232371340; XSRF-TOKEN=9SKanKqiPEUE9ufGN56KEwZy; WBPSESS=784AcvWHjyhSLTMYqaBB2R0muMjGEdz8u8017ujja8B-rRUzTBnm7gsagnfGgQRZqAAPc9f3-TXGkFGbfKm47wukfx1PdJiN5ePLNz1Gj_On1RSgHVwWOyxU1Og3dA7jwH0fT0Mwxj7SK3wSMvQIJA=="
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36",
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
     'cookie': cookie,
-    "Connection": "keep-alive",
     'accept-encoding': 'gzip, deflate, br',
     'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
     'cache-control': 'max-age=0',
@@ -211,7 +210,7 @@ def get_weibo_keyword(w_url):
     resp = requests.get(w_url, headers=headers).json()
     cards = resp['data']['cards']
     for card in cards:
-        print(card)
+        # print(card)
         if "mblog" in card.keys():
             # 转
             reposts_count = card["mblog"]["reposts_count"]
@@ -233,17 +232,23 @@ def get_weibo_keyword(w_url):
             article_time = datetime.datetime.strptime(create_time, "%a %b %d %H:%M:%S %Y")
             timeArray = time.strptime(str(article_time), "%Y-%m-%d %H:%M:%S")
             timestamp = time.mktime(timeArray)
-            if int(timestamp) <= 1632067200 or int(timestamp) >= 1635523200:
-                return
-            ws.append([
-                user_name, fans, reposts_count, attitudes_count, comments_count, content, article_url, article_time
-            ])
+            # if 1606752000 <= int(timestamp) <= 1617120000:
+            if 1609430400 <= int(timestamp):
+                print([
+                    user_name, fans, reposts_count, attitudes_count, comments_count, content, article_url, article_time
+                ])
+                ws.append([
+                    user_name, fans, reposts_count, attitudes_count, comments_count, content, article_url, article_time
+                ])
         wb.save(path)
 
 
 if __name__ == '__main__':
-    keyword = "雅顿普拉提面霜"
-    path = r"D:\weibo\weibo_11月\weibo_11_10\{}.xlsx".format(keyword)
+
+    # keyword_list = ["逐本精华油", "兰精华油", "林清轩山茶花精华油", "PMPM玫瑰红茶精华油", "雏菊的天空翡冷翠精华油"]
+    keyword = "逐本精华油"
+    # for keyword in keyword_list:
+    path = r"D:\weibo\weibo_11月\weibo_11_29\{}.xlsx".format(keyword)
     for i in range(50):
         url = f"https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D1%26q%3D{keyword}&page_type=searchall&page={i + 1}"
         get_weibo_keyword(url)
